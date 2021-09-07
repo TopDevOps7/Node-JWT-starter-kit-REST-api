@@ -29,7 +29,6 @@ const jwtLogin = new localStrategy(
 
       return done(null, user, { message: 'Logged in Successfully' });
     } catch (error) {
-      console.log(error);
       return done(error);
     }
   }
@@ -37,12 +36,12 @@ const jwtLogin = new localStrategy(
 
 const authOptions = {
   secretOrKey: config.SecretKey,
-  jwtFromRequest: ExtractJWT.fromUrlQueryParameter('jwt')
+  jwtFromRequest: ExtractJWT.fromAuthHeaderWithScheme('jwt')
 };
 const jwtAuth = new JWTstrategy(
   authOptions,
   (jwt_payload, done) => {
-    User.findOneById(jwt_payload.id, function (err, user) {
+    User.findById(jwt_payload.id, function (err, user) {
       if (err) {
         return done(err, false);
       }
